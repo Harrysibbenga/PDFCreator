@@ -18,7 +18,7 @@ CORS(app)
 # (w:210 mm and h:297 mm) size of A4
 pdf_w = 210
 pdf_h = 297
-logo = 'PCW Logo.png'
+logo = 'files/PCW Logo.png'
 title = 'Vehicle MOT Record'
 
 
@@ -45,7 +45,7 @@ def format_json_object(data_type):
 class PDF(FPDF):
     # class to use the FPDF library
     def header(self):
-        self.add_font('Co', '', '/Volumes/Extreme SSD/Websites/PCW/pdf/Co Headline Corp.ttf', uni=True)
+        self.add_font('Co', '', 'files/Co Headline Corp.ttf', uni=True)
         # logo
         self.image(logo, 160, 8, 40)
         # Arial bold 15
@@ -65,7 +65,7 @@ class PDF(FPDF):
 
     # Page footer
     def footer(self):
-        self.add_font('Co', '', '/Volumes/Extreme SSD/Websites/PCW/pdf/Co Headline Corp.ttf', uni=True)
+        self.add_font('Co', '', 'files/Co Headline Corp.ttf', uni=True)
         # Position at 1.5 cm from bottom
         self.set_y(-15)
         # Arial italic 8
@@ -74,7 +74,7 @@ class PDF(FPDF):
         self.cell(0, 10, 'Page ' + str(self.page_no()), 0, 0, 'C')
 
     def car_info(self, name):
-        self.add_font('Co', '', '/Volumes/Extreme SSD/Websites/PCW/pdf/Co Headline Corp.ttf', uni=True)
+        self.add_font('Co', '', 'files/Co Headline Corp.ttf', uni=True)
 
         self.set_text_color(0, 0, 0)
         # Title
@@ -96,7 +96,7 @@ class PDF(FPDF):
         self.ln()
 
     def mot_info(self, name):
-        self.add_font('Co', '', '/Volumes/Extreme SSD/Websites/PCW/pdf/Co Headline Corp.ttf', uni=True)
+        self.add_font('Co', '', 'files/Co Headline Corp.ttf', uni=True)
         self.set_text_color(0, 0, 0)
         # Title
         self.cell(0, 6, 'Mot History', 0, 1, 'L', fill=False)
@@ -150,7 +150,7 @@ def create_pdf():
         name = str(df_car['Description'][0]) + '-' + str(df_car['reg'][0]) + '-' + str(today) + '.pdf'
         type(name)
 
-        with open('car.txt', 'w') as f:
+        with open('files/car.txt', 'w') as f:
             f.write('\n')
             f.write(str(df_car['Description'][0]))
             f.write('\n')
@@ -229,7 +229,7 @@ def create_pdf():
             f.write('\n')
             f.close()
 
-        with open('mot.txt', 'w') as f:
+        with open('files/mot.txt', 'w') as f:
             f.write('Tax Date : ' + str(df_mot['taxDate'][0]))
             f.write('\n')
             f.write('\n')
@@ -255,8 +255,8 @@ def create_pdf():
             pdf = PDF(orientation='P', unit='mm', format='A4')
             pdf.set_title(title)
             pdf.set_author('PCW Website')
-            pdf.print_page('car.txt', 'mot.txt')
-            pdf.output(name, 'F')
+            pdf.print_page('files/car.txt', 'files/mot.txt')
+            pdf.output('files/' + name, 'F')
         except Exception as e:
             print(e)
 
@@ -267,15 +267,15 @@ def create_pdf():
             html_content=
             f'''
             <strong>First name</strong>: {first_name}, <strong>Last name</strong>: {last_name}
-    
+
             <strong>Phone</strong>: {phone}
-            
+
             <strong>Services</strong>: {services}
-    
+
             <strong>Message</strong>: {message}
             ''')
 
-        with open(os.path.join(sys.path[0], name), "rb") as f:
+        with open('files/' + name, "rb") as f:
             data = f.read()
             f.close()
 
@@ -295,11 +295,11 @@ def create_pdf():
             print(response.status_code)
             print(response.body)
             print(response.headers)
-            if os.path.exists(name):
-                os.remove(name)
+            if os.path.exists('files/' + name):
+                os.remove('files/' + name)
         except Exception as e:
-            # if os.path.exists(name):
-            #     os.remove(name)
+            if os.path.exists('files/' + name):
+                os.remove('files/' + name)
             print(e)
             return abort(401, e)
 
