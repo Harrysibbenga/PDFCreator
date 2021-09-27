@@ -1,8 +1,10 @@
 import os
+import sys
 import json
 import base64
 import pandas as pd
 from datetime import date
+from pathlib import Path
 
 from flask import Flask, request, abort
 from fpdf import FPDF
@@ -273,7 +275,7 @@ def create_pdf():
             <strong>Message</strong>: {message}
             ''')
 
-        with open(name, 'rb') as f:
+        with open(os.path.join(sys.path[0], name), "rb") as f:
             data = f.read()
             f.close()
 
