@@ -136,7 +136,7 @@ def create_pdf():
         phone = data['phone']
         message = data['message']
         email = data['email']
-        subject = data['subject']
+        subject = 'No-reply: You have received an email from a customer'
         services = data['services']
 
         services = ','.join(services)
@@ -261,7 +261,7 @@ def create_pdf():
             print(e)
 
         message = Mail(
-            from_email=email,
+            from_email='harry@torque.racing',
             to_emails='torque.webdev@gmail.com',
             subject=subject,
             html_content=
@@ -270,7 +270,9 @@ def create_pdf():
 
             <strong>Phone</strong>: {phone}
 
-            <strong>Services</strong>: {services}
+            <strong>Email</strong>: {email}
+
+            <strong>Services required</strong>: {services}
 
             <strong>Message</strong>: {message}
             ''')
@@ -305,7 +307,7 @@ def create_pdf():
 
         return "Message Sent, Someone will be in touch soon", 201
     else:
-        return 'Please send a post method'
+        return 'Please send a post request'
 
 
 @app.route('/test')
