@@ -120,188 +120,190 @@ class PDF(FPDF):
 # noinspection PyPackageRequirements,PyPackageRequirements
 @app.route('/create_pdf', methods=['POST'])
 def create_pdf():
+    if request.method == 'POST':
+        today = date.today()
+        today = today.strftime("%d-%m-%Y")
 
-    today = date.today()
-    today = today.strftime("%d-%m-%Y")
+        data = request.get_json()
 
-    data = request.get_json()
+        car_info = data['carDetails']['carInfo']
+        mot_info = data['carDetails']['motInfo']
 
-    car_info = data['carDetails']['carInfo']
-    mot_info = data['carDetails']['motInfo']
+        first_name = data['fname']
+        last_name = data['lname']
+        phone = data['phone']
+        message = data['message']
+        email = data['email']
+        subject = data['subject']
+        services = data['services']
 
-    first_name = data['fname']
-    last_name = data['lname']
-    phone = data['phone']
-    message = data['message']
-    email = data['email']
-    subject = data['subject']
-    services = data['services']
+        services = ','.join(services)
 
-    services = ','.join(services)
+        car_dict = format_json_object(car_info)
+        mot_dict = format_json_object(mot_info)
 
-    car_dict = format_json_object(car_info)
-    mot_dict = format_json_object(mot_info)
+        df_car = pd.DataFrame.from_dict([car_dict])
+        df_mot = pd.DataFrame.from_dict(mot_dict)
 
-    df_car = pd.DataFrame.from_dict([car_dict])
-    df_mot = pd.DataFrame.from_dict(mot_dict)
+        name = str(df_car['Description'][0]) + '-' + str(df_car['reg'][0]) + '-' + str(today) + '.pdf'
+        type(name)
 
-    name = str(df_car['Description'][0]) + '-' + str(df_car['reg'][0]) + '-' + str(today) + '.pdf'
-    type(name)
-
-    with open('car.txt', 'w') as f:
-        f.write('\n')
-        f.write(str(df_car['Description'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Registration : ' + str(df_car['reg'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Registration Year : ' + str(df_car['RegistrationYear'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Colour : ' + str(df_car['Colour'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Car Make : ' + str(df_car['CarMake'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Car Model : ' + str(df_car['CarModel'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Body Style : ' + str(df_car['BodyStyle'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Number Of Doors : ' + str(df_car['NumberOfDoors'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Transmission : ' + str(df_car['Transmission'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Fuel Type : ' + str(df_car['FuelType'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Engine Code : ' + str(df_car['EngineCode'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Engine Number : ' + str(df_car['EngineNumber'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Immobiliser : ' + str(df_car['Immobiliser'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Number Of Seats : ' + str(df_car['NumberOfSeats'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Indicative Value : ' + str(df_car['IndicativeValue'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Driver Side : ' + str(df_car['DriverSide'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Vehicle Insurance Group : ' + str(df_car['VehicleInsuranceGroup'][0]))
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('\t')
-        f.write('Vehicle Insurance Group Out Of : ' + str(df_car['VehicleInsuranceGroupOutOf'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.write('Vehicle Identification Number : ' + str(df_car['VehicleIdentificationNumber'][0]))
-        f.write('\n')
-        f.write('\n')
-        f.close()
-
-    with open('mot.txt', 'w') as f:
-        f.write('Tax Date : ' + str(df_mot['taxDate'][0]))
-        f.write('\n')
-        f.write('\n')
-        for hist in df_mot[df_mot['history'].notna()]['history']:
-            f.write('Test Due Date : ' + str(hist['TestDate']))
+        with open('car.txt', 'w') as f:
             f.write('\n')
-            f.write('Expiry Date : ' + str(hist['ExpiryDate']))
-            f.write('\n')
-            f.write('Result : ' + str(hist['Result']))
-            f.write('\n')
-            f.write('Odometer : ' + str(hist['Odometer']))
-            f.write('\n')
-            f.write('Test Number : ' + str(hist['TestNumber']))
-            f.write('\n')
-            f.write('FailureReasons : ' + str(hist['FailureReasons']))
-            f.write('\n')
-            f.write('Advisories : ' + str(hist['Advisories']))
+            f.write(str(df_car['Description'][0]))
             f.write('\n')
             f.write('\n')
-        f.close()
-    try:
-        # creation of an A4 pdf page in portrait measured in millimeters
-        pdf = PDF(orientation='P', unit='mm', format='A4')
-        pdf.set_title(title)
-        pdf.set_author('PCW Website')
-        pdf.print_page('car.txt', 'mot.txt')
-        pdf.output(name, 'F')
-    except Exception as e:
-        print(e)
+            f.write('Registration : ' + str(df_car['reg'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Registration Year : ' + str(df_car['RegistrationYear'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Colour : ' + str(df_car['Colour'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Car Make : ' + str(df_car['CarMake'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Car Model : ' + str(df_car['CarModel'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Body Style : ' + str(df_car['BodyStyle'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Number Of Doors : ' + str(df_car['NumberOfDoors'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Transmission : ' + str(df_car['Transmission'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Fuel Type : ' + str(df_car['FuelType'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Engine Code : ' + str(df_car['EngineCode'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Engine Number : ' + str(df_car['EngineNumber'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Immobiliser : ' + str(df_car['Immobiliser'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Number Of Seats : ' + str(df_car['NumberOfSeats'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Indicative Value : ' + str(df_car['IndicativeValue'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Driver Side : ' + str(df_car['DriverSide'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Vehicle Insurance Group : ' + str(df_car['VehicleInsuranceGroup'][0]))
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('\t')
+            f.write('Vehicle Insurance Group Out Of : ' + str(df_car['VehicleInsuranceGroupOutOf'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.write('Vehicle Identification Number : ' + str(df_car['VehicleIdentificationNumber'][0]))
+            f.write('\n')
+            f.write('\n')
+            f.close()
 
-    message = Mail(
-        from_email=email,
-        to_emails='torque.webdev@gmail.com',
-        subject=subject,
-        html_content=
-        f'''
-        <strong>First name</strong>: {first_name}, <strong>Last name</strong>: {last_name}
+        with open('mot.txt', 'w') as f:
+            f.write('Tax Date : ' + str(df_mot['taxDate'][0]))
+            f.write('\n')
+            f.write('\n')
+            for hist in df_mot[df_mot['history'].notna()]['history']:
+                f.write('Test Due Date : ' + str(hist['TestDate']))
+                f.write('\n')
+                f.write('Expiry Date : ' + str(hist['ExpiryDate']))
+                f.write('\n')
+                f.write('Result : ' + str(hist['Result']))
+                f.write('\n')
+                f.write('Odometer : ' + str(hist['Odometer']))
+                f.write('\n')
+                f.write('Test Number : ' + str(hist['TestNumber']))
+                f.write('\n')
+                f.write('FailureReasons : ' + str(hist['FailureReasons']))
+                f.write('\n')
+                f.write('Advisories : ' + str(hist['Advisories']))
+                f.write('\n')
+                f.write('\n')
+            f.close()
+        try:
+            # creation of an A4 pdf page in portrait measured in millimeters
+            pdf = PDF(orientation='P', unit='mm', format='A4')
+            pdf.set_title(title)
+            pdf.set_author('PCW Website')
+            pdf.print_page('car.txt', 'mot.txt')
+            pdf.output(name, 'F')
+        except Exception as e:
+            print(e)
 
-        <strong>Phone</strong>: {phone}
-        
-        <strong>Services</strong>: {services}
+        message = Mail(
+            from_email=email,
+            to_emails='torque.webdev@gmail.com',
+            subject=subject,
+            html_content=
+            f'''
+            <strong>First name</strong>: {first_name}, <strong>Last name</strong>: {last_name}
+    
+            <strong>Phone</strong>: {phone}
+            
+            <strong>Services</strong>: {services}
+    
+            <strong>Message</strong>: {message}
+            ''')
 
-        <strong>Message</strong>: {message}
-        ''')
+        with open(name, 'rb') as f:
+            data = f.read()
+            f.close()
 
-    with open(name, 'rb') as f:
-        data = f.read()
-        f.close()
+        encoded_file = base64.b64encode(data).decode()
 
-    encoded_file = base64.b64encode(data).decode()
+        attached_file = Attachment(
+            FileContent(encoded_file),
+            FileName(name),
+            FileType('application/pdf'),
+            Disposition('attachment')
+        )
 
-    attached_file = Attachment(
-        FileContent(encoded_file),
-        FileName(name),
-        FileType('application/pdf'),
-        Disposition('attachment')
-    )
+        message.attachment = attached_file
+        try:
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            response = sg.send(message)
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
+            if os.path.exists(name):
+                os.remove(name)
+        except Exception as e:
+            # if os.path.exists(name):
+            #     os.remove(name)
+            print(e)
+            return abort(401, e)
 
-    message.attachment = attached_file
-    try:
-        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        response = sg.send(message)
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-        if os.path.exists(name):
-            os.remove(name)
-    except Exception as e:
-        # if os.path.exists(name):
-        #     os.remove(name)
-        print(e)
-        return abort(401, e)
-
-    return "Message Sent, Someone will be in touch soon", 201
+        return "Message Sent, Someone will be in touch soon", 201
+    else:
+        return 'Please send a post method'
 
 
 @app.route('/test')
