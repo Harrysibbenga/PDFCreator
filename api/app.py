@@ -261,20 +261,21 @@ def create_pdf():
             print(e)
 
         message = Mail(
-            from_email='harry@torque.racing',
-            to_emails='torque.webdev@gmail.com',
+            from_email='service@parkerclassicworks.com',
+            to_emails='edward@parkerclassicworks.com',
             subject=subject,
             html_content=
             f'''
-            <strong>First name</strong>: {first_name}, <strong>Last name</strong>: {last_name}
-
-            <strong>Phone</strong>: {phone}
-
-            <strong>Email</strong>: {email}
-
-            <strong>Services required</strong>: {services}
-
-            <strong>Message</strong>: {message}
+            <strong>First name</strong>: {first_name} \n 
+            <strong>Last name</strong>: {last_name} \n
+            <br />
+            <strong>Phone</strong>: {phone} \n
+            <br />
+            <strong>Email</strong>: {email} \n
+            <br />
+            <strong>Services required</strong>: {services} \n
+            <br />
+            <strong>Message</strong>: {message} \n
             ''')
 
         with open('files/' + name, "rb") as f:

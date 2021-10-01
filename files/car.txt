@@ -1,21 +1,21 @@
 
-RENAULT CLIO DIESEL HATCHBACK - 1.5 dCi 90 Dynamique S MediaNav Energy 5dr
+PEUGEOT 208 HATCHBACK - 1.2 PureTech 82 Tech Edition 5dr [Start Stop]
 
-Registration : KU64CXX				Registration Year : 2014
+Registration : ky19djt				Registration Year : 2019
 
-Colour : Black				Car Make : RENAULT
+Colour : Black				Car Make : PEUGEOT
 
-Car Model : CLIO DIESEL HATCHBACK - 1.5 dCi 90 Dynamique S MediaNav Energy 5dr
+Car Model : 208 HATCHBACK - 1.2 PureTech 82 Tech Edition 5dr [Start Stop]
 
-Body Style : 1.5 dCi 90 Dynamique S MediaNav Energy 5dr
+Body Style : 1.2 PureTech 82 Tech Edition 5dr [Start Stop]
 
-Number Of Doors : 5				Transmission : Manual				Fuel Type : Diesel
+Number Of Doors : 5				Transmission : Manual				Fuel Type : Petrol
 
 Engine Code : 				Engine Number : 				Immobiliser : 
 
 Number Of Seats : 5				Indicative Value : 0				Driver Side : 
 
-Vehicle Insurance Group : 12				Vehicle Insurance Group Out Of : 20
+Vehicle Insurance Group : 5				Vehicle Insurance Group Out Of : 20
 
-Vehicle Identification Number : VF15RFL0H51334416
+Vehicle Identification Number : VF3CCHMRPKW037462
 
